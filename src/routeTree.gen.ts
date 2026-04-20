@@ -9,38 +9,252 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppProfileRouteImport } from './routes/_app.profile'
+import { Route as AppLibraryRouteImport } from './routes/_app.library'
+import { Route as AppHomeRouteImport } from './routes/_app.home'
+import { Route as AppContributeRouteImport } from './routes/_app.contribute'
+import { Route as AppAdminRouteImport } from './routes/_app.admin'
+import { Route as AppLearnIndexRouteImport } from './routes/_app.learn.index'
+import { Route as AppExploreIndexRouteImport } from './routes/_app.explore.index'
+import { Route as AppExploreSlugRouteImport } from './routes/_app.explore.$slug'
+import { Route as AppLearnLgaSlugDialectSlugIndexRouteImport } from './routes/_app.learn.$lgaSlug.$dialectSlug.index'
+import { Route as AppLearnLgaSlugDialectSlugLessonLessonIdIndexRouteImport } from './routes/_app.learn.$lgaSlug.$dialectSlug.lesson.$lessonId.index'
+import { Route as AppLearnLgaSlugDialectSlugLessonLessonIdQuizRouteImport } from './routes/_app.learn.$lgaSlug.$dialectSlug.lesson.$lessonId.quiz'
 
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLibraryRoute = AppLibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppHomeRoute = AppHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppContributeRoute = AppContributeRouteImport.update({
+  id: '/contribute',
+  path: '/contribute',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLearnIndexRoute = AppLearnIndexRouteImport.update({
+  id: '/learn/',
+  path: '/learn/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppExploreIndexRoute = AppExploreIndexRouteImport.update({
+  id: '/explore/',
+  path: '/explore/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppExploreSlugRoute = AppExploreSlugRouteImport.update({
+  id: '/explore/$slug',
+  path: '/explore/$slug',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLearnLgaSlugDialectSlugIndexRoute =
+  AppLearnLgaSlugDialectSlugIndexRouteImport.update({
+    id: '/learn/$lgaSlug/$dialectSlug/',
+    path: '/learn/$lgaSlug/$dialectSlug/',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppLearnLgaSlugDialectSlugLessonLessonIdIndexRoute =
+  AppLearnLgaSlugDialectSlugLessonLessonIdIndexRouteImport.update({
+    id: '/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/',
+    path: '/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppLearnLgaSlugDialectSlugLessonLessonIdQuizRoute =
+  AppLearnLgaSlugDialectSlugLessonLessonIdQuizRouteImport.update({
+    id: '/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/quiz',
+    path: '/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/quiz',
+    getParentRoute: () => AppRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/signup': typeof SignupRoute
+  '/admin': typeof AppAdminRoute
+  '/contribute': typeof AppContributeRoute
+  '/home': typeof AppHomeRoute
+  '/library': typeof AppLibraryRoute
+  '/profile': typeof AppProfileRoute
+  '/explore/$slug': typeof AppExploreSlugRoute
+  '/explore/': typeof AppExploreIndexRoute
+  '/learn/': typeof AppLearnIndexRoute
+  '/learn/$lgaSlug/$dialectSlug/': typeof AppLearnLgaSlugDialectSlugIndexRoute
+  '/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/quiz': typeof AppLearnLgaSlugDialectSlugLessonLessonIdQuizRoute
+  '/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/': typeof AppLearnLgaSlugDialectSlugLessonLessonIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/signup': typeof SignupRoute
+  '/admin': typeof AppAdminRoute
+  '/contribute': typeof AppContributeRoute
+  '/home': typeof AppHomeRoute
+  '/library': typeof AppLibraryRoute
+  '/profile': typeof AppProfileRoute
+  '/explore/$slug': typeof AppExploreSlugRoute
+  '/explore': typeof AppExploreIndexRoute
+  '/learn': typeof AppLearnIndexRoute
+  '/learn/$lgaSlug/$dialectSlug': typeof AppLearnLgaSlugDialectSlugIndexRoute
+  '/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/quiz': typeof AppLearnLgaSlugDialectSlugLessonLessonIdQuizRoute
+  '/learn/$lgaSlug/$dialectSlug/lesson/$lessonId': typeof AppLearnLgaSlugDialectSlugLessonLessonIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/signup': typeof SignupRoute
+  '/_app/admin': typeof AppAdminRoute
+  '/_app/contribute': typeof AppContributeRoute
+  '/_app/home': typeof AppHomeRoute
+  '/_app/library': typeof AppLibraryRoute
+  '/_app/profile': typeof AppProfileRoute
+  '/_app/explore/$slug': typeof AppExploreSlugRoute
+  '/_app/explore/': typeof AppExploreIndexRoute
+  '/_app/learn/': typeof AppLearnIndexRoute
+  '/_app/learn/$lgaSlug/$dialectSlug/': typeof AppLearnLgaSlugDialectSlugIndexRoute
+  '/_app/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/quiz': typeof AppLearnLgaSlugDialectSlugLessonLessonIdQuizRoute
+  '/_app/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/': typeof AppLearnLgaSlugDialectSlugLessonLessonIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/onboarding'
+    | '/signup'
+    | '/admin'
+    | '/contribute'
+    | '/home'
+    | '/library'
+    | '/profile'
+    | '/explore/$slug'
+    | '/explore/'
+    | '/learn/'
+    | '/learn/$lgaSlug/$dialectSlug/'
+    | '/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/quiz'
+    | '/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/onboarding'
+    | '/signup'
+    | '/admin'
+    | '/contribute'
+    | '/home'
+    | '/library'
+    | '/profile'
+    | '/explore/$slug'
+    | '/explore'
+    | '/learn'
+    | '/learn/$lgaSlug/$dialectSlug'
+    | '/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/quiz'
+    | '/learn/$lgaSlug/$dialectSlug/lesson/$lessonId'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/login'
+    | '/onboarding'
+    | '/signup'
+    | '/_app/admin'
+    | '/_app/contribute'
+    | '/_app/home'
+    | '/_app/library'
+    | '/_app/profile'
+    | '/_app/explore/$slug'
+    | '/_app/explore/'
+    | '/_app/learn/'
+    | '/_app/learn/$lgaSlug/$dialectSlug/'
+    | '/_app/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/quiz'
+    | '/_app/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  OnboardingRoute: typeof OnboardingRoute
+  SignupRoute: typeof SignupRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +262,124 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/profile': {
+      id: '/_app/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/library': {
+      id: '/_app/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof AppLibraryRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/home': {
+      id: '/_app/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof AppHomeRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/contribute': {
+      id: '/_app/contribute'
+      path: '/contribute'
+      fullPath: '/contribute'
+      preLoaderRoute: typeof AppContributeRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin': {
+      id: '/_app/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/learn/': {
+      id: '/_app/learn/'
+      path: '/learn'
+      fullPath: '/learn/'
+      preLoaderRoute: typeof AppLearnIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/explore/': {
+      id: '/_app/explore/'
+      path: '/explore'
+      fullPath: '/explore/'
+      preLoaderRoute: typeof AppExploreIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/explore/$slug': {
+      id: '/_app/explore/$slug'
+      path: '/explore/$slug'
+      fullPath: '/explore/$slug'
+      preLoaderRoute: typeof AppExploreSlugRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/learn/$lgaSlug/$dialectSlug/': {
+      id: '/_app/learn/$lgaSlug/$dialectSlug/'
+      path: '/learn/$lgaSlug/$dialectSlug'
+      fullPath: '/learn/$lgaSlug/$dialectSlug/'
+      preLoaderRoute: typeof AppLearnLgaSlugDialectSlugIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/': {
+      id: '/_app/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/'
+      path: '/learn/$lgaSlug/$dialectSlug/lesson/$lessonId'
+      fullPath: '/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/'
+      preLoaderRoute: typeof AppLearnLgaSlugDialectSlugLessonLessonIdIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/quiz': {
+      id: '/_app/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/quiz'
+      path: '/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/quiz'
+      fullPath: '/learn/$lgaSlug/$dialectSlug/lesson/$lessonId/quiz'
+      preLoaderRoute: typeof AppLearnLgaSlugDialectSlugLessonLessonIdQuizRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRoute
+  AppContributeRoute: typeof AppContributeRoute
+  AppHomeRoute: typeof AppHomeRoute
+  AppLibraryRoute: typeof AppLibraryRoute
+  AppProfileRoute: typeof AppProfileRoute
+  AppExploreSlugRoute: typeof AppExploreSlugRoute
+  AppExploreIndexRoute: typeof AppExploreIndexRoute
+  AppLearnIndexRoute: typeof AppLearnIndexRoute
+  AppLearnLgaSlugDialectSlugIndexRoute: typeof AppLearnLgaSlugDialectSlugIndexRoute
+  AppLearnLgaSlugDialectSlugLessonLessonIdQuizRoute: typeof AppLearnLgaSlugDialectSlugLessonLessonIdQuizRoute
+  AppLearnLgaSlugDialectSlugLessonLessonIdIndexRoute: typeof AppLearnLgaSlugDialectSlugLessonLessonIdIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRoute,
+  AppContributeRoute: AppContributeRoute,
+  AppHomeRoute: AppHomeRoute,
+  AppLibraryRoute: AppLibraryRoute,
+  AppProfileRoute: AppProfileRoute,
+  AppExploreSlugRoute: AppExploreSlugRoute,
+  AppExploreIndexRoute: AppExploreIndexRoute,
+  AppLearnIndexRoute: AppLearnIndexRoute,
+  AppLearnLgaSlugDialectSlugIndexRoute: AppLearnLgaSlugDialectSlugIndexRoute,
+  AppLearnLgaSlugDialectSlugLessonLessonIdQuizRoute:
+    AppLearnLgaSlugDialectSlugLessonLessonIdQuizRoute,
+  AppLearnLgaSlugDialectSlugLessonLessonIdIndexRoute:
+    AppLearnLgaSlugDialectSlugLessonLessonIdIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  LoginRoute: LoginRoute,
+  OnboardingRoute: OnboardingRoute,
+  SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

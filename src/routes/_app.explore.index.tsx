@@ -14,7 +14,7 @@ function ExplorePage() {
     queryFn: async () => {
       const { data } = await supabase
         .from("lgas")
-        .select("id, slug, name, overview, cover_url, dialects(count)")
+        .select("id, slug, name, overview, cover_url, display_order, dialects(count)")
         .order("display_order");
       return data ?? [];
     },
