@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Home, Compass, GraduationCap, BookMarked, User } from "lucide-react";
+import { Home, Compass, GraduationCap, BookMarked, ShoppingBag, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const items = [
@@ -7,6 +7,7 @@ const items = [
   { to: "/explore", label: "Explore", icon: Compass },
   { to: "/learn", label: "Learn", icon: GraduationCap },
   { to: "/library", label: "Library", icon: BookMarked },
+  { to: "/shop", label: "Shop", icon: ShoppingBag },
   { to: "/profile", label: "Profile", icon: User },
 ] as const;
 
@@ -22,7 +23,7 @@ export function BottomNav() {
               <Link
                 to={to}
                 className={cn(
-                  "flex flex-col items-center justify-center gap-1 py-2.5 text-[11px] font-medium transition-colors",
+                  "flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] font-medium transition-colors",
                   active ? "text-primary" : "text-muted-foreground hover:text-foreground",
                 )}
               >
