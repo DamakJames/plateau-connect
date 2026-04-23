@@ -35,6 +35,8 @@
   --color-forest: var(--forest);
   --color-cream: var(--cream);
   --color-clay: var(--clay);
+  --color-plateau-green: var(--plateau-green);
+  --color-plateau-yellow: var(--plateau-yellow);
   --font-serif: "Fraunces", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
 }
