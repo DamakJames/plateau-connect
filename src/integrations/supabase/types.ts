@@ -486,6 +486,65 @@ export type Database = {
           },
         ]
       }
+      shop_items: {
+        Row: {
+          category: string
+          created_at: string
+          created_by: string | null
+          currency: string
+          description: string | null
+          id: string
+          images: string[]
+          is_published: boolean
+          lga_id: string | null
+          price: number
+          stock: number
+          title: string
+          tribe: string | null
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          description?: string | null
+          id?: string
+          images?: string[]
+          is_published?: boolean
+          lga_id?: string | null
+          price?: number
+          stock?: number
+          title: string
+          tribe?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          description?: string | null
+          id?: string
+          images?: string[]
+          is_published?: boolean
+          lga_id?: string | null
+          price?: number
+          stock?: number
+          title?: string
+          tribe?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shop_items_lga_id_fkey"
+            columns: ["lga_id"]
+            isOneToOne: false
+            referencedRelation: "lgas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stories: {
         Row: {
           audio_url: string | null
