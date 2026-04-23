@@ -30,22 +30,6 @@ function getYouTubeId(url: string): string | null {
 }
 
 export function MediaPlayer({ kind, src, captionsUrl, poster, className }: Props) {
-  // YouTube → iframe with native controls (handles captions)
-  const ytId = kind === "video" ? getYouTubeId(src) : null;
-  if (ytId) {
-    return (
-      <div className={cn("relative aspect-video w-full overflow-hidden rounded-2xl bg-black", className)}>
-        <iframe
-          src={`https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1&cc_load_policy=1`}
-          title="Video player"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="h-full w-full"
-        />
-      </div>
-    );
-  }
-
   const ref = React.useRef<HTMLVideoElement | HTMLAudioElement | null>(null);
   const [playing, setPlaying] = React.useState(false);
   const [muted, setMuted] = React.useState(false);
@@ -53,7 +37,10 @@ export function MediaPlayer({ kind, src, captionsUrl, poster, className }: Props
   const [duration, setDuration] = React.useState(0);
   const [captionsOn, setCaptionsOn] = React.useState(false);
 
+  const ytId = kind === "video" ? getYouTubeId(src) : null;
+
   React.useEffect(() => {
+    if (ytId) return;
     const el = ref.current;
     if (!el) return;
     const onTime = () => setTime(el.currentTime);
@@ -67,15 +54,30 @@ export function MediaPlayer({ kind, src, captionsUrl, poster, className }: Props
       el.removeEventListener("loadedmetadata", onMeta);
       el.removeEventListener("ended", onEnd);
     };
-  }, []);
+  }, [ytId, src]);
 
   React.useEffect(() => {
+    if (ytId) return;
     const el = ref.current as HTMLMediaElement | null;
     if (!el || !("textTracks" in el)) return;
     Array.from(el.textTracks).forEach((t) => {
       t.mode = captionsOn ? "showing" : "hidden";
     });
-  }, [captionsOn]);
+  }, [captionsOn, ytId]);
+
+  if (ytId) {
+    return (
+      <div className={cn("relative aspect-video w-full overflow-hidden rounded-2xl bg-black", className)}>
+        <iframe
+          src={`https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1&cc_load_policy=1`}
+          title="Video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="h-full w-full"
+        />
+      </div>
+    );
+  }
 
   const toggle = () => {
     const el = ref.current;
