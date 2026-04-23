@@ -14,6 +14,7 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppShopRouteImport } from './routes/_app.shop'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
 import { Route as AppLibraryRouteImport } from './routes/_app.library'
 import { Route as AppHomeRouteImport } from './routes/_app.home'
@@ -49,6 +50,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppShopRoute = AppShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppProfileRoute = AppProfileRouteImport.update({
   id: '/profile',
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof AppHomeRoute
   '/library': typeof AppLibraryRoute
   '/profile': typeof AppProfileRoute
+  '/shop': typeof AppShopRoute
   '/explore/$slug': typeof AppExploreSlugRoute
   '/explore/': typeof AppExploreIndexRoute
   '/learn/': typeof AppLearnIndexRoute
@@ -136,6 +143,7 @@ export interface FileRoutesByTo {
   '/home': typeof AppHomeRoute
   '/library': typeof AppLibraryRoute
   '/profile': typeof AppProfileRoute
+  '/shop': typeof AppShopRoute
   '/explore/$slug': typeof AppExploreSlugRoute
   '/explore': typeof AppExploreIndexRoute
   '/learn': typeof AppLearnIndexRoute
@@ -155,6 +163,7 @@ export interface FileRoutesById {
   '/_app/home': typeof AppHomeRoute
   '/_app/library': typeof AppLibraryRoute
   '/_app/profile': typeof AppProfileRoute
+  '/_app/shop': typeof AppShopRoute
   '/_app/explore/$slug': typeof AppExploreSlugRoute
   '/_app/explore/': typeof AppExploreIndexRoute
   '/_app/learn/': typeof AppLearnIndexRoute
@@ -174,6 +183,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/library'
     | '/profile'
+    | '/shop'
     | '/explore/$slug'
     | '/explore/'
     | '/learn/'
@@ -191,6 +201,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/library'
     | '/profile'
+    | '/shop'
     | '/explore/$slug'
     | '/explore'
     | '/learn'
@@ -209,6 +220,7 @@ export interface FileRouteTypes {
     | '/_app/home'
     | '/_app/library'
     | '/_app/profile'
+    | '/_app/shop'
     | '/_app/explore/$slug'
     | '/_app/explore/'
     | '/_app/learn/'
@@ -261,6 +273,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/shop': {
+      id: '/_app/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof AppShopRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/profile': {
       id: '/_app/profile'
@@ -348,6 +367,7 @@ interface AppRouteChildren {
   AppHomeRoute: typeof AppHomeRoute
   AppLibraryRoute: typeof AppLibraryRoute
   AppProfileRoute: typeof AppProfileRoute
+  AppShopRoute: typeof AppShopRoute
   AppExploreSlugRoute: typeof AppExploreSlugRoute
   AppExploreIndexRoute: typeof AppExploreIndexRoute
   AppLearnIndexRoute: typeof AppLearnIndexRoute
@@ -362,6 +382,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppHomeRoute: AppHomeRoute,
   AppLibraryRoute: AppLibraryRoute,
   AppProfileRoute: AppProfileRoute,
+  AppShopRoute: AppShopRoute,
   AppExploreSlugRoute: AppExploreSlugRoute,
   AppExploreIndexRoute: AppExploreIndexRoute,
   AppLearnIndexRoute: AppLearnIndexRoute,
@@ -384,3 +405,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

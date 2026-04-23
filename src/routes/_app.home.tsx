@@ -1,44 +1,63 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
-import { ChevronRight, BookOpen, Music2, Quote, Languages } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Compass, GraduationCap, BookMarked, Upload, Info, ChevronRight } from "lucide-react";
+import { HeroCarousel } from "@/components/HeroCarousel";
 
 export const Route = createFileRoute("/_app/home")({
   component: HomePage,
 });
 
-function HomePage() {
-  const { user } = useAuth();
-  const { data: featured } = useQuery({
-    queryKey: ["lga-featured"],
-    queryFn: async () => {
-      const { data } = await supabase.from("lgas").select("*").order("display_order").limit(1).maybeSingle();
-      return data;
-    },
-  });
-  const { data: latestStories } = useQuery({
-    queryKey: ["latest-stories"],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("stories")
-        .select("id, title, lga_id, lgas(name, slug)")
-        .order("created_at", { ascending: false })
-        .limit(5);
-      return data ?? [];
-    },
-  });
+const tiles = [
+  {
+    to: "/explore" as const,
+    title: "Explore",
+    sub: "LGAs · Tribes · Dialects",
+    icon: Compass,
+    bg: "bg-card",
+    iconBg: "bg-primary/15 text-primary",
+  },
+  {
+    to: "/learn" as const,
+    title: "Learn",
+    sub: "Words · Stories · Culture",
+    icon: GraduationCap,
+    bg: "bg-clay text-primary-foreground",
+    iconBg: "bg-white/20 text-white",
+  },
+  {
+    to: "/library" as const,
+    title: "Library",
+    sub: "Videos · Audio · Photos",
+    icon: BookMarked,
+    bg: "bg-plateau-green text-primary-foreground",
+    iconBg: "bg-white/20 text-white",
+  },
+  {
+    to: "/contribute" as const,
+    title: "Contribute",
+    sub: "Share your heritage",
+    icon: Upload,
+    bg: "bg-card",
+    iconBg: "bg-accent/15 text-accent",
+  },
+  {
+    to: "/profile" as const,
+    title: "About",
+    sub: "Mission · Partnership",
+    icon: Info,
+    bg: "bg-destructive text-destructive-foreground",
+    iconBg: "bg-white/20 text-white",
+  },
+];
 
-  const { data: continueLesson } = useQuery({
-    queryKey: ["continue", user?.id],
-    enabled: !!user,
+function HomePage() {
+  const { data: phrase } = useQuery({
+    queryKey: ["word-of-day"],
     queryFn: async () => {
       const { data } = await supabase
-        .from("lesson_progress")
-        .select("lesson_id, last_viewed_at, lessons(id, title, dialect_id, dialects(name, slug, lgas(slug)))")
-        .eq("user_id", user!.id)
-        .order("last_viewed_at", { ascending: false })
+        .from("phrases")
+        .select("text, translation, category, dialects(name)")
         .limit(1)
         .maybeSingle();
       return data;
@@ -46,100 +65,77 @@ function HomePage() {
   });
 
   return (
-    <div className="space-y-6 p-5">
-      <header className="flex items-center justify-between pt-2">
-        <div>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground">Sannu da zuwa</p>
-          <h1 className="font-serif text-2xl font-bold">Welcome to PLATO</h1>
-        </div>
-      </header>
+    <div className="pb-6">
+      <HeroCarousel />
 
-      {featured && (
-        <Link to="/explore/$slug" params={{ slug: featured.slug }} className="block">
-          <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-primary via-primary/90 to-accent p-6 text-primary-foreground shadow-lg">
-            <p className="text-xs font-medium uppercase tracking-widest opacity-80">Featured LGA</p>
-            <h2 className="mt-2 font-serif text-3xl font-bold">{featured.name}</h2>
-            <p className="mt-2 line-clamp-2 text-sm opacity-90">{featured.overview}</p>
-            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium">
-              Explore <ChevronRight className="h-4 w-4" />
-            </span>
-          </Card>
-        </Link>
-      )}
-
-      {continueLesson?.lessons && (
-        <section>
-          <h3 className="mb-3 font-serif text-lg font-semibold">Continue learning</h3>
-          <Link
-            to="/learn/$lgaSlug/$dialectSlug/lesson/$lessonId"
-            params={{
-              lgaSlug: (continueLesson.lessons as any).dialects.lgas.slug,
-              dialectSlug: (continueLesson.lessons as any).dialects.slug,
-              lessonId: continueLesson.lesson_id,
-            }}
-          >
-            <Card className="flex items-center gap-3 p-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary/40 text-primary">
-                <BookOpen className="h-5 w-5" />
-              </div>
-              <div className="flex-1">
-                <p className="text-xs text-muted-foreground">{(continueLesson.lessons as any).dialects.name}</p>
-                <p className="font-medium">{(continueLesson.lessons as any).title}</p>
-              </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            </Card>
-          </Link>
-        </section>
-      )}
-
-      <section>
-        <h3 className="mb-3 font-serif text-lg font-semibold">Browse by category</h3>
+      <section className="px-5 pt-6">
+        <h3 className="mb-3 font-serif text-base font-semibold tracking-tight">
+          Where would you like to go?
+        </h3>
         <div className="grid grid-cols-2 gap-3">
-          <CategoryTile to="/learn" icon={Languages} label="Languages" tone="bg-primary/10 text-primary" />
-          <CategoryTile to="/library" icon={BookOpen} label="Stories" tone="bg-secondary/40 text-secondary-foreground" />
-          <CategoryTile to="/library" icon={Quote} label="Proverbs" tone="bg-accent/10 text-accent" />
-          <CategoryTile to="/library" icon={Music2} label="Media" tone="bg-muted text-foreground" />
+          {tiles.slice(0, 4).map((t) => (
+            <TileLink key={t.title} {...t} />
+          ))}
+          <div className="col-span-2">
+            <TileLink {...tiles[4]} wide />
+          </div>
         </div>
       </section>
 
-      <section>
-        <h3 className="mb-3 font-serif text-lg font-semibold">Latest stories</h3>
-        {latestStories && latestStories.length > 0 ? (
-          <div className="space-y-2">
-            {latestStories.map((s) => (
-              <Card key={s.id} className="p-4">
-                <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                  {(s.lgas as { name: string } | null)?.name ?? "Plateau"}
-                </p>
-                <p className="mt-1 font-medium">{s.title}</p>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <EmptyHint label="Stories will appear here as they're added." />
-        )}
+      <section className="px-5 pt-6">
+        <div className="mb-2 flex items-center justify-between">
+          <h3 className="font-serif text-base font-semibold tracking-tight">Word of the Day</h3>
+          <Link to="/learn" className="text-xs font-medium text-primary">
+            Learn More
+          </Link>
+        </div>
+        <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-clay to-primary p-5 text-primary-foreground shadow-md">
+          <p className="text-[11px] font-medium uppercase tracking-[0.2em] opacity-90">
+            {(phrase?.dialects as { name: string } | null)?.name ?? "Ngas"}
+          </p>
+          <p className="mt-1 font-serif text-4xl font-bold">{phrase?.text ?? "Tat"}</p>
+          <p className="mt-2 text-sm opacity-90">
+            /{phrase?.translation ?? "father"}/
+          </p>
+          <p className="mt-1 text-xs opacity-80">
+            {phrase?.category ?? "Family · Greetings"}
+          </p>
+        </div>
       </section>
     </div>
   );
 }
 
-function CategoryTile({ to, icon: Icon, label, tone }: { to: "/learn" | "/library"; icon: typeof BookOpen; label: string; tone: string }) {
+function TileLink({
+  to,
+  title,
+  sub,
+  icon: Icon,
+  bg,
+  iconBg,
+  wide,
+}: {
+  to: "/explore" | "/learn" | "/library" | "/contribute" | "/profile";
+  title: string;
+  sub: string;
+  icon: typeof Compass;
+  bg: string;
+  iconBg: string;
+  wide?: boolean;
+}) {
   return (
-    <Link to={to} className="block">
-      <Card className="flex flex-col items-start gap-2 p-4">
-        <div className={`flex h-10 w-10 items-center justify-center rounded-full ${tone}`}>
-          <Icon className="h-5 w-5" />
+    <Link
+      to={to}
+      className={`group block rounded-2xl border border-border/60 ${bg} p-4 shadow-sm transition hover:shadow-md`}
+    >
+      <div className="flex items-start justify-between">
+        <div className={`flex h-9 w-9 items-center justify-center rounded-xl ${iconBg}`}>
+          <Icon className="h-4.5 w-4.5" />
         </div>
-        <p className="font-medium">{label}</p>
-      </Card>
+        <ChevronRight className="h-4 w-4 opacity-50 transition group-hover:translate-x-0.5" />
+      </div>
+      <p className={`mt-3 font-serif font-bold ${wide ? "text-lg" : "text-base"}`}>{title}</p>
+      <p className="mt-0.5 text-[11px] opacity-80">{sub}</p>
     </Link>
-  );
-}
-
-function EmptyHint({ label }: { label: string }) {
-  return (
-    <Card className="border-dashed bg-muted/30 p-6 text-center text-sm text-muted-foreground">
-      {label}
-    </Card>
   );
 }

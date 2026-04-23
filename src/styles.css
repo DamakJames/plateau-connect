@@ -35,6 +35,8 @@
   --color-forest: var(--forest);
   --color-cream: var(--cream);
   --color-clay: var(--clay);
+  --color-plateau-green: var(--plateau-green);
+  --color-plateau-yellow: var(--plateau-yellow);
   --font-serif: "Fraunces", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
 }
@@ -72,10 +74,12 @@
   --input: oklch(0.9 0.02 70);
   --ring: oklch(0.55 0.15 38);
 
-  --ochre: oklch(0.74 0.14 70);
-  --forest: oklch(0.42 0.08 145);
+  --ochre: oklch(0.78 0.16 75);
+  --forest: oklch(0.45 0.12 150);
   --cream: oklch(0.97 0.018 80);
-  --clay: oklch(0.55 0.15 38);
+  --clay: oklch(0.6 0.18 45);
+  --plateau-green: oklch(0.5 0.13 150);
+  --plateau-yellow: oklch(0.82 0.16 90);
 }
 
 .dark {
