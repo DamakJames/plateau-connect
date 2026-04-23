@@ -2,8 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useMemo } from "react";
-import { Search, Menu, Video, Headphones, Image as ImageIcon, Layers, PlayCircle } from "lucide-react";
+import { Search, Menu, Video, Headphones, Image as ImageIcon, Layers, PlayCircle, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { MediaPlayer } from "@/components/MediaPlayer";
 
 export const Route = createFileRoute("/_app/library")({
   component: LibraryPage,
@@ -20,6 +21,7 @@ function LibraryPage() {
   const [tab, setTab] = useState<(typeof mediaTabs)[number]["id"]>("all");
   const [tribe, setTribe] = useState<string>("all");
   const [query, setQuery] = useState("");
+  const [openId, setOpenId] = useState<string | null>(null);
 
   const { data: media } = useQuery({
     queryKey: ["library-media"],
@@ -125,10 +127,19 @@ function LibraryPage() {
         ) : (
           <div className="grid grid-cols-2 gap-3">
             {filtered.map((m) => (
-              <div key={m.id} className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+              <button
+                key={m.id}
+                onClick={() => setOpenId(m.id)}
+                className="text-left overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition hover:shadow-md"
+              >
                 <div className="relative aspect-square bg-muted">
-                  {m.thumbnail_url ? (
-                    <img src={m.thumbnail_url} alt={m.title} className="h-full w-full object-cover" loading="lazy" />
+                  {m.thumbnail_url || m.kind === "image" ? (
+                    <img
+                      src={m.thumbnail_url ?? m.url}
+                      alt={m.title}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center">
                       <PlayCircle className="h-8 w-8 text-muted-foreground" />
@@ -144,11 +155,48 @@ function LibraryPage() {
                     {(m.lgas as { name: string } | null)?.name}
                   </p>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         )}
       </section>
+
+      {openId && (() => {
+        const item = (filtered ?? []).find((m) => m.id === openId);
+        if (!item) return null;
+        return (
+          <div
+            className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 backdrop-blur-sm sm:items-center"
+            onClick={() => setOpenId(null)}
+          >
+            <div
+              className="w-full max-w-md rounded-t-3xl bg-card p-4 shadow-2xl sm:rounded-3xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mb-3 flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-serif text-lg font-bold leading-tight">{item.title}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {(item.lgas as { name: string } | null)?.name ?? "Plateau"} · {item.kind}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setOpenId(null)}
+                  aria-label="Close"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              {item.kind === "image" ? (
+                <img src={item.url} alt={item.title} className="w-full rounded-2xl" />
+              ) : (
+                <MediaPlayer kind={item.kind === "video" ? "video" : "audio"} src={item.url} />
+              )}
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }

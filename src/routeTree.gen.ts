@@ -23,6 +23,7 @@ import { Route as AppAdminRouteImport } from './routes/_app.admin'
 import { Route as AppLearnIndexRouteImport } from './routes/_app.learn.index'
 import { Route as AppExploreIndexRouteImport } from './routes/_app.explore.index'
 import { Route as AppExploreSlugRouteImport } from './routes/_app.explore.$slug'
+import { Route as AppAdminShopRouteImport } from './routes/_app.admin.shop'
 import { Route as AppLearnLgaSlugDialectSlugIndexRouteImport } from './routes/_app.learn.$lgaSlug.$dialectSlug.index'
 import { Route as AppLearnLgaSlugDialectSlugLessonLessonIdIndexRouteImport } from './routes/_app.learn.$lgaSlug.$dialectSlug.lesson.$lessonId.index'
 import { Route as AppLearnLgaSlugDialectSlugLessonLessonIdQuizRouteImport } from './routes/_app.learn.$lgaSlug.$dialectSlug.lesson.$lessonId.quiz'
@@ -96,6 +97,11 @@ const AppExploreSlugRoute = AppExploreSlugRouteImport.update({
   path: '/explore/$slug',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdminShopRoute = AppAdminShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => AppAdminRoute,
+} as any)
 const AppLearnLgaSlugDialectSlugIndexRoute =
   AppLearnLgaSlugDialectSlugIndexRouteImport.update({
     id: '/learn/$lgaSlug/$dialectSlug/',
@@ -120,12 +126,13 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/signup': typeof SignupRoute
-  '/admin': typeof AppAdminRoute
+  '/admin': typeof AppAdminRouteWithChildren
   '/contribute': typeof AppContributeRoute
   '/home': typeof AppHomeRoute
   '/library': typeof AppLibraryRoute
   '/profile': typeof AppProfileRoute
   '/shop': typeof AppShopRoute
+  '/admin/shop': typeof AppAdminShopRoute
   '/explore/$slug': typeof AppExploreSlugRoute
   '/explore/': typeof AppExploreIndexRoute
   '/learn/': typeof AppLearnIndexRoute
@@ -138,12 +145,13 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/signup': typeof SignupRoute
-  '/admin': typeof AppAdminRoute
+  '/admin': typeof AppAdminRouteWithChildren
   '/contribute': typeof AppContributeRoute
   '/home': typeof AppHomeRoute
   '/library': typeof AppLibraryRoute
   '/profile': typeof AppProfileRoute
   '/shop': typeof AppShopRoute
+  '/admin/shop': typeof AppAdminShopRoute
   '/explore/$slug': typeof AppExploreSlugRoute
   '/explore': typeof AppExploreIndexRoute
   '/learn': typeof AppLearnIndexRoute
@@ -158,12 +166,13 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/signup': typeof SignupRoute
-  '/_app/admin': typeof AppAdminRoute
+  '/_app/admin': typeof AppAdminRouteWithChildren
   '/_app/contribute': typeof AppContributeRoute
   '/_app/home': typeof AppHomeRoute
   '/_app/library': typeof AppLibraryRoute
   '/_app/profile': typeof AppProfileRoute
   '/_app/shop': typeof AppShopRoute
+  '/_app/admin/shop': typeof AppAdminShopRoute
   '/_app/explore/$slug': typeof AppExploreSlugRoute
   '/_app/explore/': typeof AppExploreIndexRoute
   '/_app/learn/': typeof AppLearnIndexRoute
@@ -184,6 +193,7 @@ export interface FileRouteTypes {
     | '/library'
     | '/profile'
     | '/shop'
+    | '/admin/shop'
     | '/explore/$slug'
     | '/explore/'
     | '/learn/'
@@ -202,6 +212,7 @@ export interface FileRouteTypes {
     | '/library'
     | '/profile'
     | '/shop'
+    | '/admin/shop'
     | '/explore/$slug'
     | '/explore'
     | '/learn'
@@ -221,6 +232,7 @@ export interface FileRouteTypes {
     | '/_app/library'
     | '/_app/profile'
     | '/_app/shop'
+    | '/_app/admin/shop'
     | '/_app/explore/$slug'
     | '/_app/explore/'
     | '/_app/learn/'
@@ -337,6 +349,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppExploreSlugRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/admin/shop': {
+      id: '/_app/admin/shop'
+      path: '/shop'
+      fullPath: '/admin/shop'
+      preLoaderRoute: typeof AppAdminShopRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
     '/_app/learn/$lgaSlug/$dialectSlug/': {
       id: '/_app/learn/$lgaSlug/$dialectSlug/'
       path: '/learn/$lgaSlug/$dialectSlug'
@@ -361,8 +380,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppAdminRouteChildren {
+  AppAdminShopRoute: typeof AppAdminShopRoute
+}
+
+const AppAdminRouteChildren: AppAdminRouteChildren = {
+  AppAdminShopRoute: AppAdminShopRoute,
+}
+
+const AppAdminRouteWithChildren = AppAdminRoute._addFileChildren(
+  AppAdminRouteChildren,
+)
+
 interface AppRouteChildren {
-  AppAdminRoute: typeof AppAdminRoute
+  AppAdminRoute: typeof AppAdminRouteWithChildren
   AppContributeRoute: typeof AppContributeRoute
   AppHomeRoute: typeof AppHomeRoute
   AppLibraryRoute: typeof AppLibraryRoute
@@ -377,7 +408,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppAdminRoute: AppAdminRoute,
+  AppAdminRoute: AppAdminRouteWithChildren,
   AppContributeRoute: AppContributeRoute,
   AppHomeRoute: AppHomeRoute,
   AppLibraryRoute: AppLibraryRoute,

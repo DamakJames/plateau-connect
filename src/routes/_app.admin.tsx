@@ -83,6 +83,20 @@ function AdminPage() {
         <Stat label="Dialects" value={counts?.dialects ?? 0} />
       </div>
 
+      <div className="mt-6 grid grid-cols-2 gap-3">
+        <Link
+          to="/admin/shop"
+          className="rounded-2xl bg-gradient-to-br from-primary to-[var(--ochre)] p-4 text-primary-foreground shadow-sm"
+        >
+          <p className="font-serif text-lg font-bold">Shop manager</p>
+          <p className="mt-1 text-xs opacity-90">Upload products, set prices, publish</p>
+        </Link>
+        <div className="rounded-2xl border border-dashed border-border bg-muted/30 p-4 text-muted-foreground">
+          <p className="font-serif text-lg font-bold">Media manager</p>
+          <p className="mt-1 text-xs">Coming next step</p>
+        </div>
+      </div>
+
       <h2 className="mt-8 font-serif text-lg font-semibold">Moderation queue</h2>
       <div className="mt-3 space-y-3">
         {pending && pending.length > 0 ? pending.map((s) => (
