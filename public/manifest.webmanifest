@@ -1,0 +1,16 @@
+{
+  "name": "PLATO — Plateau Digital Cultural Archive",
+  "short_name": "PLATO",
+  "description": "Where Culture Lives On. Explore Plateau State's 17 LGAs, learn dialects, stories, proverbs and more.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fdf6ec",
+  "theme_color": "#c46a3a",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
