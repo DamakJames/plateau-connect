@@ -100,6 +100,8 @@ function AdminPage() {
         </Link>
       </div>
 
+      <AdminUsers currentUserId={user.id} />
+
       <h2 className="mt-8 font-serif text-lg font-semibold">Moderation queue</h2>
       <div className="mt-3 space-y-3">
         {pending && pending.length > 0 ? pending.map((s) => (
@@ -141,5 +143,105 @@ function Stat({ label, value }: { label: string; value: number }) {
       <p className="font-serif text-3xl font-bold text-primary">{value}</p>
       <p className="text-xs text-muted-foreground">{label}</p>
     </Card>
+  );
+}
+
+function AdminUsers({ currentUserId }: { currentUserId: string }) {
+  const qc = useQueryClient();
+  const [q, setQ] = useState("");
+
+  const { data: rows } = useQuery({
+    queryKey: ["admin-users", q],
+    queryFn: async () => {
+      let query = supabase
+        .from("profiles")
+        .select("id, display_name, user_roles(role)")
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (q.trim()) query = query.ilike("display_name", `%${q.trim()}%`);
+      const { data, error } = await query;
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  const setRole = useMutation({
+    mutationFn: async ({ userId, role, grant }: { userId: string; role: "admin" | "contributor"; grant: boolean }) => {
+      if (grant) {
+        const { error } = await supabase.from("user_roles").insert({ user_id: userId, role });
+        if (error && !`${error.message}`.includes("duplicate")) throw error;
+      } else {
+        const { error } = await supabase.from("user_roles").delete().eq("user_id", userId).eq("role", role);
+        if (error) throw error;
+      }
+    },
+    onSuccess: (_, vars) => {
+      toast.success(`${vars.grant ? "Granted" : "Revoked"} ${vars.role}`);
+      qc.invalidateQueries({ queryKey: ["admin-users"] });
+      qc.invalidateQueries({ queryKey: ["admin-counts"] });
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
+  return (
+    <section className="mt-8">
+      <div className="flex items-center justify-between">
+        <h2 className="font-serif text-lg font-semibold">Admins & contributors</h2>
+        <UserPlus className="h-4 w-4 text-muted-foreground" />
+      </div>
+      <p className="text-xs text-muted-foreground">Promote trusted users to admin or contributor.</p>
+      <Input
+        value={q}
+        onChange={(e) => setQ(e.target.value)}
+        placeholder="Search by display name…"
+        className="mt-3"
+      />
+      <div className="mt-3 space-y-2">
+        {rows && rows.length > 0 ? rows.map((p) => {
+          const userRoles = ((p.user_roles as { role: string }[] | null) ?? []).map((r) => r.role);
+          const isAdminUser = userRoles.includes("admin");
+          const isContrib = userRoles.includes("contributor");
+          const isSelf = p.id === currentUserId;
+          return (
+            <Card key={p.id} className="flex items-center gap-3 p-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 font-serif text-sm font-bold text-primary">
+                {(p.display_name ?? "?").slice(0, 1).toUpperCase()}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium">
+                  {p.display_name ?? "Unnamed"} {isSelf && <span className="text-xs text-muted-foreground">(you)</span>}
+                </p>
+                <p className="text-[11px] text-muted-foreground">
+                  {isAdminUser ? "admin · " : ""}{isContrib ? "contributor" : "user"}
+                </p>
+              </div>
+              <div className="flex gap-1">
+                <Button
+                  size="sm"
+                  variant={isContrib ? "secondary" : "outline"}
+                  onClick={() => setRole.mutate({ userId: p.id, role: "contributor", grant: !isContrib })}
+                  className="h-7 px-2 text-[11px]"
+                >
+                  {isContrib ? "Contrib ✓" : "Make contrib"}
+                </Button>
+                <Button
+                  size="sm"
+                  variant={isAdminUser ? "default" : "outline"}
+                  disabled={isSelf && isAdminUser}
+                  onClick={() => setRole.mutate({ userId: p.id, role: "admin", grant: !isAdminUser })}
+                  className="h-7 px-2 text-[11px]"
+                >
+                  {isAdminUser ? <><ShieldOff className="mr-1 h-3 w-3" />Revoke</> : <><ShieldCheck className="mr-1 h-3 w-3" />Make admin</>}
+                </Button>
+              </div>
+            </Card>
+          );
+        }) : (
+          <Card className="border-dashed bg-muted/30 p-6 text-center text-xs text-muted-foreground">
+            No users found.
+          </Card>
+        )}
+      </div>
+    </section>
   );
 }
