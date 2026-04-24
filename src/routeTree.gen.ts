@@ -20,10 +20,12 @@ import { Route as AppLibraryRouteImport } from './routes/_app.library'
 import { Route as AppHomeRouteImport } from './routes/_app.home'
 import { Route as AppContributeRouteImport } from './routes/_app.contribute'
 import { Route as AppAdminRouteImport } from './routes/_app.admin'
+import { Route as AppAboutRouteImport } from './routes/_app.about'
 import { Route as AppLearnIndexRouteImport } from './routes/_app.learn.index'
 import { Route as AppExploreIndexRouteImport } from './routes/_app.explore.index'
 import { Route as AppExploreSlugRouteImport } from './routes/_app.explore.$slug'
 import { Route as AppAdminShopRouteImport } from './routes/_app.admin.shop'
+import { Route as AppAdminMediaRouteImport } from './routes/_app.admin.media'
 import { Route as AppLearnLgaSlugDialectSlugIndexRouteImport } from './routes/_app.learn.$lgaSlug.$dialectSlug.index'
 import { Route as AppLearnLgaSlugDialectSlugLessonLessonIdIndexRouteImport } from './routes/_app.learn.$lgaSlug.$dialectSlug.lesson.$lessonId.index'
 import { Route as AppLearnLgaSlugDialectSlugLessonLessonIdQuizRouteImport } from './routes/_app.learn.$lgaSlug.$dialectSlug.lesson.$lessonId.quiz'
@@ -82,6 +84,11 @@ const AppAdminRoute = AppAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAboutRoute = AppAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppLearnIndexRoute = AppLearnIndexRouteImport.update({
   id: '/learn/',
   path: '/learn/',
@@ -100,6 +107,11 @@ const AppExploreSlugRoute = AppExploreSlugRouteImport.update({
 const AppAdminShopRoute = AppAdminShopRouteImport.update({
   id: '/shop',
   path: '/shop',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminMediaRoute = AppAdminMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
   getParentRoute: () => AppAdminRoute,
 } as any)
 const AppLearnLgaSlugDialectSlugIndexRoute =
@@ -126,12 +138,14 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/signup': typeof SignupRoute
+  '/about': typeof AppAboutRoute
   '/admin': typeof AppAdminRouteWithChildren
   '/contribute': typeof AppContributeRoute
   '/home': typeof AppHomeRoute
   '/library': typeof AppLibraryRoute
   '/profile': typeof AppProfileRoute
   '/shop': typeof AppShopRoute
+  '/admin/media': typeof AppAdminMediaRoute
   '/admin/shop': typeof AppAdminShopRoute
   '/explore/$slug': typeof AppExploreSlugRoute
   '/explore/': typeof AppExploreIndexRoute
@@ -145,12 +159,14 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/signup': typeof SignupRoute
+  '/about': typeof AppAboutRoute
   '/admin': typeof AppAdminRouteWithChildren
   '/contribute': typeof AppContributeRoute
   '/home': typeof AppHomeRoute
   '/library': typeof AppLibraryRoute
   '/profile': typeof AppProfileRoute
   '/shop': typeof AppShopRoute
+  '/admin/media': typeof AppAdminMediaRoute
   '/admin/shop': typeof AppAdminShopRoute
   '/explore/$slug': typeof AppExploreSlugRoute
   '/explore': typeof AppExploreIndexRoute
@@ -166,12 +182,14 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/signup': typeof SignupRoute
+  '/_app/about': typeof AppAboutRoute
   '/_app/admin': typeof AppAdminRouteWithChildren
   '/_app/contribute': typeof AppContributeRoute
   '/_app/home': typeof AppHomeRoute
   '/_app/library': typeof AppLibraryRoute
   '/_app/profile': typeof AppProfileRoute
   '/_app/shop': typeof AppShopRoute
+  '/_app/admin/media': typeof AppAdminMediaRoute
   '/_app/admin/shop': typeof AppAdminShopRoute
   '/_app/explore/$slug': typeof AppExploreSlugRoute
   '/_app/explore/': typeof AppExploreIndexRoute
@@ -187,12 +205,14 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/signup'
+    | '/about'
     | '/admin'
     | '/contribute'
     | '/home'
     | '/library'
     | '/profile'
     | '/shop'
+    | '/admin/media'
     | '/admin/shop'
     | '/explore/$slug'
     | '/explore/'
@@ -206,12 +226,14 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/signup'
+    | '/about'
     | '/admin'
     | '/contribute'
     | '/home'
     | '/library'
     | '/profile'
     | '/shop'
+    | '/admin/media'
     | '/admin/shop'
     | '/explore/$slug'
     | '/explore'
@@ -226,12 +248,14 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/signup'
+    | '/_app/about'
     | '/_app/admin'
     | '/_app/contribute'
     | '/_app/home'
     | '/_app/library'
     | '/_app/profile'
     | '/_app/shop'
+    | '/_app/admin/media'
     | '/_app/admin/shop'
     | '/_app/explore/$slug'
     | '/_app/explore/'
@@ -328,6 +352,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/about': {
+      id: '/_app/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AppAboutRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/learn/': {
       id: '/_app/learn/'
       path: '/learn'
@@ -356,6 +387,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminShopRouteImport
       parentRoute: typeof AppAdminRoute
     }
+    '/_app/admin/media': {
+      id: '/_app/admin/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AppAdminMediaRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
     '/_app/learn/$lgaSlug/$dialectSlug/': {
       id: '/_app/learn/$lgaSlug/$dialectSlug/'
       path: '/learn/$lgaSlug/$dialectSlug'
@@ -381,10 +419,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppAdminRouteChildren {
+  AppAdminMediaRoute: typeof AppAdminMediaRoute
   AppAdminShopRoute: typeof AppAdminShopRoute
 }
 
 const AppAdminRouteChildren: AppAdminRouteChildren = {
+  AppAdminMediaRoute: AppAdminMediaRoute,
   AppAdminShopRoute: AppAdminShopRoute,
 }
 
@@ -393,6 +433,7 @@ const AppAdminRouteWithChildren = AppAdminRoute._addFileChildren(
 )
 
 interface AppRouteChildren {
+  AppAboutRoute: typeof AppAboutRoute
   AppAdminRoute: typeof AppAdminRouteWithChildren
   AppContributeRoute: typeof AppContributeRoute
   AppHomeRoute: typeof AppHomeRoute
@@ -408,6 +449,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAboutRoute: AppAboutRoute,
   AppAdminRoute: AppAdminRouteWithChildren,
   AppContributeRoute: AppContributeRoute,
   AppHomeRoute: AppHomeRoute,
