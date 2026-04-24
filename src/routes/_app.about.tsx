@@ -78,9 +78,15 @@ function AboutPage() {
             <p className="text-sm font-semibold">Get in touch</p>
           </div>
           <p className="mt-2 text-xs text-muted-foreground">
-            For partnerships, schools or research collaboration — reach out via the contribute form
-            and select "Suggestion".
+            For partnerships, schools, research collaboration or general inquiries — write to us at:
           </p>
+          <a
+            href="mailto:plateaudigitalarchive@gmail.com"
+            className="mt-2 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20"
+          >
+            <Mail className="h-3.5 w-3.5" />
+            plateaudigitalarchive@gmail.com
+          </a>
         </div>
         <p className="mt-6 text-center text-[11px] text-muted-foreground">
           © {new Date().getFullYear()} PLATO · A digital archive for Plateau State

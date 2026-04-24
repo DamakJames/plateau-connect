@@ -123,27 +123,24 @@ function ContributePage() {
 
       <div className="px-5 pt-6">
         <Label className="text-xs uppercase tracking-wide text-muted-foreground">What are you contributing?</Label>
-        <div className="mt-2 grid grid-cols-2 gap-2">
-          {KINDS.map((k) => {
-            const Icon = k.icon;
-            const isActive = kind === k.value;
-            return (
-              <button
-                key={k.value}
-                type="button"
-                onClick={() => setKind(k.value)}
-                className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-sm font-medium transition ${
-                  isActive
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border bg-card text-foreground hover:bg-muted/40"
-                }`}
-              >
-                <Icon className="h-4 w-4 shrink-0" />
-                {k.label}
-              </button>
-            );
-          })}
-        </div>
+        <Select value={kind} onValueChange={(v) => setKind(v as typeof kind)}>
+          <SelectTrigger className="mt-2">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {KINDS.map((k) => {
+              const Icon = k.icon;
+              return (
+                <SelectItem key={k.value} value={k.value}>
+                  <span className="inline-flex items-center gap-2">
+                    <Icon className="h-4 w-4" />
+                    {k.label}
+                  </span>
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
         <p className="mt-2 text-xs text-muted-foreground">{active.hint}</p>
       </div>
 
