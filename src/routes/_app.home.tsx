@@ -42,7 +42,7 @@ const tiles = [
     iconBg: "bg-accent/15 text-accent",
   },
   {
-    to: "/profile" as const,
+    to: "/about" as const,
     title: "About",
     sub: "Mission · Partnership",
     icon: Info,
@@ -115,7 +115,7 @@ function TileLink({
   iconBg,
   wide,
 }: {
-  to: "/explore" | "/learn" | "/library" | "/contribute" | "/profile";
+  to: "/explore" | "/learn" | "/library" | "/contribute" | "/about";
   title: string;
   sub: string;
   icon: typeof Compass;
