@@ -155,13 +155,24 @@ function AdminUsers({ currentUserId }: { currentUserId: string }) {
     queryFn: async () => {
       let query = supabase
         .from("profiles")
-        .select("id, display_name, user_roles(role)")
+        .select("id, display_name")
         .order("created_at", { ascending: false })
         .limit(50);
       if (q.trim()) query = query.ilike("display_name", `%${q.trim()}%`);
-      const { data, error } = await query;
+      const { data: profiles, error } = await query;
       if (error) throw error;
-      return data ?? [];
+      const ids = (profiles ?? []).map((p) => p.id);
+      const { data: roleRows } = await supabase
+        .from("user_roles")
+        .select("user_id, role")
+        .in("user_id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]);
+      const byUser = new Map<string, string[]>();
+      (roleRows ?? []).forEach((r) => {
+        const arr = byUser.get(r.user_id) ?? [];
+        arr.push(r.role);
+        byUser.set(r.user_id, arr);
+      });
+      return (profiles ?? []).map((p) => ({ ...p, roles: byUser.get(p.id) ?? [] }));
     },
   });
 
@@ -198,9 +209,8 @@ function AdminUsers({ currentUserId }: { currentUserId: string }) {
       />
       <div className="mt-3 space-y-2">
         {rows && rows.length > 0 ? rows.map((p) => {
-          const userRoles = ((p.user_roles as { role: string }[] | null) ?? []).map((r) => r.role);
-          const isAdminUser = userRoles.includes("admin");
-          const isContrib = userRoles.includes("contributor");
+          const isAdminUser = p.roles.includes("admin");
+          const isContrib = p.roles.includes("contributor");
           const isSelf = p.id === currentUserId;
           return (
             <Card key={p.id} className="flex items-center gap-3 p-3">
