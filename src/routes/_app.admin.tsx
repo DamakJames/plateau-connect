@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   ArrowLeft, Check, X, ShieldCheck, ShieldOff, Plus, Trash2, Loader2,
-  Eye, EyeOff, Upload, Music, Youtube, ImageIcon, Pencil,
+  Eye, EyeOff, Upload, Music, Youtube, ImageIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 
